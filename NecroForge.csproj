@@ -32,28 +32,27 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>I:\SteamLibrary\steamapps\common\Necropolis\Necropolis_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\Necropolis_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="HOOKS-Assembly-CSharp">
-      <HintPath>I:\SteamLibrary\steamapps\common\Necropolis\Necropolis_Data\Managed\HOOKS-Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoMod">
-      <HintPath>I:\Partiality\bin\MonoMod.exe</HintPath>
+      <HintPath>..\..\Necropolis_Data\Managed\HOOKS-Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="MonoMod.Utils">
-      <HintPath>I:\Partiality\bin\MonoMod.Utils.dll</HintPath>
+      <HintPath>..\..\Necropolis_Data\Managed\MonoMod.Utils.dll</HintPath>
     </Reference>
     <Reference Include="Partiality">
-      <HintPath>I:\AT References\Partiality.dll</HintPath>
+      <HintPath>..\..\Necropolis_Data\Managed\Partiality.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\..\ZekesNewThrowables\ZekesNewThrowables\lib-proj\UnityEngine.dll</HintPath>
+      <HintPath>..\..\Necropolis_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NecroForge.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27428.2015
+VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NecroForge", "NecroForge\NecroForge.csproj", "{803DA5E1-F5DE-4143-AA08-F188FB481A3F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NecroForge", "NecroForge.csproj", "{803DA5E1-F5DE-4143-AA08-F188FB481A3F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +20,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {DC411A63-95F5-45A1-AB1B-E7456E619095}
+		SolutionGuid = {254D92D0-8601-40BB-922D-BCB77A1863C2}
 	EndGlobalSection
 EndGlobal
