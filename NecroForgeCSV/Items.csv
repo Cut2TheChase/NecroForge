@@ -1,0 +1,35 @@
+Group,ID,Tuning Notes,Tier,Obscurity,Base Value,Tags,Prefab REF,Move Set,Heft,Trigger Game Effect,Active Traits,Passive Traits,Charges / Durability,Kind,Bone REF,Strike Game Effect,Projectile Speed,Ammo ID,Ammo Use,Cooldown,ActorBody REF,Crafting Recipe,Unique,Max Count
+Component,patchOver_IceCubes,2,0,0,,component,pf-crafting_component-square_pot,,,,,,1,Ingredient,SourceRoot,,,,,,,,,100
+Component,patchOver_Embers,2,0,0,,component,pf-crafting_component-square_pot,,,,,,1,Ingredient,SourceRoot,,,,,,,,,100
+Component,patchOver_ShadowbornEffluvia,2,0,0,,component,pf-crafting_component-pyramid,,,,,,1,Ingredient,SourceRoot,,,,,,,,,100
+Component,patchOver_ShellMageShell,2,0,0,,component,pf-crafting_component-octahedron,,,,,,1,Ingredient,SourceRoot,,,,,,,,,100
+Component,patchOver_GrineCrystalShard,2,0,0,,component,pf-crafting_component-octahedron,,,,,,1,Ingredient,SourceRoot,,,,,,,,,100
+,patchAdd_FrozenPyramidShortsword,,,,,,,,,,,,,,,,,,,,,"PyramidShortsword, IceCubes",,
+,patchAdd_BobsFireSword,,,,,,,,,,,,,,,,,,,,,"BaseHookedBlade_Comp, Embers",,
+,patchAdd_TheMoonBlade,,,,,,,,,,,,,,,,,,,,,"BerelaineShortsword_Comp, ArcaneDust",,
+,patchAdd_StunningQuickblade,,,,,,,,,,,,,,,,,,,,,"ObsidianQuickblade_Comp, EssentialOil, ShadowbornEffluvia",,
+,patchAdd_HoardmanHatchet,,,,,,,,,,,,,,,,,,,,,"HoardmanHatchetNormal_Comp, Embers",,
+,patchAdd_FrozenPyramidPick,,,,,,,,,,,,,,,,,,,,,"PyramidPick_Comp, IceCubes, IceCubes",,
+,patchAdd_IlarnekLongsword,,,,,,,,,,,,,,,,,,,,,"CrackedLongsword_Comp, IceCubes",,
+,patchAdd_GrineLongsword,,,,,,,,,,,,,,,,,,,,,"PyramidLongsword_Comp, GrineCrystalShard",,
+,patchAdd_TheSwordOfCastleOffWhiteSkull,,,,,,,,,,,,,,,,,,,,,"CrackedLongsword_Comp, BoneMatter, AncientBones, Metal",,
+,patchAdd_TheSwordOfPersonality,,,,,,,,,,,,,,,,,,,,,"TheSwordOfCastleOffWhiteSkull_Comp, Crystal, Metal, ClockworkGears, TornFlesh",,
+,patchAdd_ShadowbornLongsword,,,,,,,,,,,,,,,,,,,,,"ShadowbornScimitar_Comp, ShadowbornEffluvia",,
+,patchAdd_SentinelBlade,,,,,,,,,,,,,,,,,,,,,"SwordOfCassus_Comp, ArcaneDust",,
+,patchAdd_GrineGreatsword,,,,,,,,,,,,,,,,,,,,,"SandakarGreatswordNormal_Comp, GrineCrystalShard",,
+,patchAdd_SandakarGreatsword,,,,,,,,,,,,,,,,,,,,,"SandakarGreatswordNormal_Comp, Embers",,
+,patchAdd_GrineHoardmanGreatsword,,,,,,,,,,,,,,,,,,,,,"GrineHoardmanGreatsword_Comp, GrineCrystalShard",,
+,patchAdd_GreatswordOfPain,,,,,,,,,,,,,,,,,,,,,"GrineHoardmanGreatsword_Comp, ArcaneDust, ArcaneDust",,
+,patchAdd_SpiritScythe,,,,,,,,,,,,,,,,,,,,,"PyramidGreatscythe_Comp, ShadowbornEffluvia",,
+,patchAdd_FireScythe,,,,,,,,,,,,,,,,,,,,,"PyramidGreatscythe_Comp, Embers",,
+,patchAdd_GrinePrimalGreatsword,,,,,,,,,,,,,,,,,,,,,"TheGreatswordOfOpulence_Comp, GrineCrystalShard, GrineCrystalShard, GrineCrystalShard, GrineCrystalShard",,
+,patchAdd_GrineKiteShield,,,,,,,,,,,,,,,,,,,,,"PyramidShield_Comp, GrineCrystalShard",,
+,patchAdd_FrozenWallShield,,,,,,,,,,,,,,,,,,,,,"WallShield_Comp, IceCubes",,
+,patchAdd_GrineMagicCrossbow,,,,,,,,,,,,,,,,,,,,,"MagicCrossbow_Comp, GrineCrystalShard",,
+,patchAdd_MagicCrossbow,,,,,,,,,,,,,,,,,,,,,"BaseCrossbow_Comp, ArcaneDust",,
+,patchAdd_FireMagicCrossbow,,,,,,,,,,,,,,,,,,,,,"MagicCrossbow_Comp, Embers",,
+,patchAdd_ArcaneMagicCrossbow,,,,,,,,,,,,,,,,,,,,,"MagicCrossbow_Comp, ArcaneDust",,
+,patchAdd_PoisonMagicCrossbow,,,,,,,,,,,,,,,,,,,,,"MagicCrossbow_Comp, Fungus",,
+,patchAdd_IceMagicCrossbow,,,,,,,,,,,,,,,,,,,,,"MagicCrossbow_Comp, IceCubes",,
+,patchAdd_SporeMagicCrossbow,,,,,,,,,,,,,,,,,,,,,"MagicCrossbow_Comp, Spore",,
+,patchAdd_GhostMagicCrossbow,,,,,,,,,,,,,,,,,,,,,"MagicCrossbow_Comp, ShadowbornEffluvia",,
