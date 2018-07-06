@@ -5,6 +5,7 @@ import os
 import sys
 
 op = os.path
+pp = pprint.PrettyPrinter(indent=2)
 
 #TUNING contains Items.csv
 #text contains Strings.csv
@@ -13,8 +14,10 @@ GamePaths = {
     'text'   :   '../../Necropolis_Data/StreamingAssets/data/text/'}
 
 FileNames = {
-    'Items'     :   'Items.csv',
-    'Strings'   :   'Strings.csv',
+    'Items'             :   'Items.csv',
+    'Strings'           :   'Strings.csv',
+    'Template'          :   'Template.csv',
+    'Eetems'            :   'Eetems.csv',
     'NecroForgeStrings' :   'NecroForgeStrings.csv'}
 
 
@@ -31,6 +34,21 @@ def GetFieldNames(filePath,fileName):
                 print('Removed: ')
                 del field        
     return reader.fieldnames
+
+#####################################################################
+################    GET COMPONENT TEMPLATE  #########################
+# filePath: path
+#####################################################################
+def GetComponentTemplate(fileName, fieldNames):
+    # Getting a component entry that already exists
+    with open(op.join(FileNames[fileName]), newline='', encoding='utf8') as csvfile:
+        reader = csv.DictReader(csvfile, fieldnames=fieldNames)
+        for row in reader:
+            if row['Group'] == 'Component':
+                for entry in row:
+                    templateComponent = dict(row)
+                    continue
+    return templateComponent
 
 
 #####################################################################
@@ -72,8 +90,63 @@ def GetComponents(itemCSVPaths, fieldNames):
     return items
 
 
+def MakeComponents(itemComps, fieldNames):
+    templateComponent = GetComponentTemplate('Template',fieldNames)
+    itemCompEntries = []
+    for str in itemComps:
+        newComponent = copy.deepcopy(templateComponent)
+        str = 'patchOver_' + str + '_Comp'
+        newComponent['ID'] = str
+        print(newComponent['ID'])
+        itemCompEntries.append(newComponent)
+    return itemCompEntries
+    
+#####################################################################
+##################    WRITE ITEMS  ##################################
+# itemComps: list of item components
+# fieldNames: dictionary field names
+#####################################################################
+def WriteItems(itemComps, fieldNames):
+    # Gotta collect the current items file into a dictionary
+    # then write that shit to the file,
+    # then write the itemStrings to the file that don't already exist
+    ItemCSVOrigContents = []
+    with open(FileNames['Items'], newline='', encoding='utf8') as csvfile:
+        reader = csv.DictReader(csvfile, fieldnames=fieldNames)
+        for row in reader:
+            if row['ID'] != '':
+                ItemCSVOrigContents.append(row)
+
+    print('\n Making itemCompEntries...')
+    itemCompEntries = MakeComponents(itemComps, fieldNames)
+
+    with open('outf.csv', 'w', newline='', encoding='utf8') as outf:
+        writer = csv.DictWriter(outf, fieldnames=fieldNames)
+        print('\n Writing Eetems...')
+        for entry in ItemCSVOrigContents:
+            writer.writerow(entry)
+
+        #for row in itemCompEntries:
+            #for entry in ItemCSVOrigContents:
+        for row in itemCompEntries:
+            for entry in ItemCSVOrigContents:
+                if row['ID'] == entry['ID']:
+                    itemCompEntries.remove(row)
+            writer.writerow(row)
+
+
+    if op.isfile(FileNames['Items']):
+       os.remove(FileNames['Items'])
+    os.replace(outf.name, FileNames['Items'])
+
+    return
+
+
 #####################################################################
 ################    GET ITEM STRINGS    #############################
+# stringCSVPaths: list of paths to Strings.csv files
+# fieldNames: dictionary field names
+# itemComps: component versions of items ( BaseLongsword_Comp )
 #####################################################################
 def GetItemStrings(stringCSVPaths, fieldNames, itemComps):
     print('\n Getting Usual Strings...')
@@ -150,7 +223,7 @@ def WriteStrings(itemComps, fieldNames, itemStrings):
 
     with open('outf.csv', 'w', newline='', encoding='utf8') as outf:
         writer = csv.DictWriter(outf, fieldnames=fieldNames)
-        print('\n Writing Strongs...')
+        print('\n Writing Strings...')
         stringsNF = GetNFIngredientStrings(fieldNames)
         for str in stringsNF:
             writer.writerow(str)
@@ -165,7 +238,15 @@ def WriteStrings(itemComps, fieldNames, itemStrings):
 
 
 print("################ START ################")
-itemComps = GetComponents(WalkDirectories('Items'), GetFieldNames('TUNING','Items'))
-strings = GetItemStrings(WalkDirectories('Strings'), GetFieldNames('text','Strings'), itemComps)
-WriteStrings(itemComps, GetFieldNames('text','Strings'),strings)
+stringFieldNames = GetFieldNames('text','Strings')
+itemFieldNames = GetFieldNames('TUNING','Items')
+
+itemComps = GetComponents(WalkDirectories('Items'), itemFieldNames)
+
+strings = GetItemStrings(WalkDirectories('Strings'), stringFieldNames, itemComps)
+
+WriteItems(itemComps, itemFieldNames)
+
+WriteStrings(itemComps, stringFieldNames, strings)
+
 print("################ END ################")

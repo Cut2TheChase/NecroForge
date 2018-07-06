@@ -1,0 +1,2 @@
+Group,ID,Tuning Notes,Tier,Obscurity,Base Value,Tags,Prefab REF,Move Set,Heft,Trigger Game Effect,Active Traits,Passive Traits,Charges / Durability,Kind,Bone REF,Strike Game Effect,Projectile Speed,Ammo ID,Ammo Use,Cooldown,ActorBody REF,Crafting Recipe,Unique,Max Count
+Component,DummyID,2,0,0,,component,pf-crafting_component-octahedron,,,,,,1,Ingredient,SourceRoot,,,,,,,,,100

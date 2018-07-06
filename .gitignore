@@ -8,6 +8,9 @@
 *.user
 *.userosscache
 *.sln.docstates
+AssemblyInfo.cs
+NecroForge.csproj
+NecroForge.sln
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -328,3 +331,4 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+NecroForge.cs
