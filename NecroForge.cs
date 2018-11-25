@@ -19,44 +19,59 @@ namespace NecroForge
         {
             typeof(Utils).ModInterop();
 
-
             //We need to modify AddItem so that when you pick up equipment, you also get an ingredient/component with it
             On.Necro.Inventory.AddItem += (orig, instance, item, quiet, network) =>
             {
-                Debug.Log("Picking up " + item.def.id + " of kind " + item.def.kind);
+                //Debug.Log("Picking up " + item.def.id + " of kind " + item.def.kind);
                 if (item.def.kind == ItemDef.Kind.Weapon)
                 {
+                    //Debug.Log("Hey we are picking up a weapon! and we also should have: " + LazySingletonBehavior<DataManager>.Instance.Items.Get(item.def.id + "_Comp").id);
                     Debug.Log("Hey we are picking up a weapon!");
 
-                    //Now add that ingredient to your inventory!
-                    //instance.AddIngredient(newIng.def.id, 1);
-                    //Utils.NetworkAddIngredient(newIng.def.id, 1);
+                    if (LazySingletonBehavior<DataManager>.Instance.Items.TryGet(item.def.id + "_Comp", out ItemDef componentDef))
+                    {
+                        Item componentItem = new Item(componentDef);
+                        instance.AddItem(componentItem, quiet, network);
+                        Debug.Log("You got a single " + componentItem.def.id + " which means it exists.");
+                        
+                        /**********************************************/
+                        /*  This is the business of adding a recipe   */
+                        /**********************************************/
+                        // Get actor...
+                        //Actor characterActor = ThirdPersonCameraControl.Instance.CharacterActor;
 
-                    //We make a new item definition for our equipment ingredient/component
-                    ItemDef blankItem = new ItemDef();
+                        // Make general use recipeDef...
+                        ItemDef recipeDef = null;
 
-                    //We give it the same name as the equipment
-                    blankItem.id = item.def.id + "_Comp";
-
-                    blankItem.group = "Component";
-                    blankItem.tier = 0;
-                    blankItem.obscurity = 0;
-                    blankItem.prefabName = "pf-crafting_component-octahedron";
-                    blankItem.kind = ItemDef.Kind.Ingredient;
-                    blankItem.boneRef = "SourceRoot";
-                    blankItem.maxCount = 100;
-
-                    Item newIng = new Item(blankItem);
-                    newIng.intValue = 1;
-                    //newIng.def.id = blankItem.id + "_Comp";
-                    newIng.def.id = blankItem.id;
-
-
-                    instance.AddItem(newIng);
-
-                    Debug.Log("Do we now have that ingredient? Lets find out- " + instance.HaveIngredient(newIng.def.id, 1));
-
-
+                        // Loop through all IDs in Items.Keys... 
+                        Debug.Log("Fetching Recipes...");
+                        foreach (string id in LazySingletonBehavior<DataManager>.Instance.Items.Keys)
+                        {
+                            // Get ItemDef from string id...
+                            recipeDef = LazySingletonBehavior<DataManager>.Instance.Items.Get(id);
+                            // if there are crafting components listed and the number is greater than 0...
+                            if (recipeDef.craftingComponents != null && recipeDef.craftingComponents.Length > 0)
+                            {
+                                // if recipe contains component version of picked up item...
+                                foreach (ItemDef.CraftingComponent component in recipeDef.craftingComponents)
+                                {
+                                    if (component.itemDefId.Contains(item.def.id))
+                                    {
+                                        // Add recipe and boast.
+                                        Debug.Log("Relevant recipe found, adding: " + recipeDef.id);
+                                        //Inventory.Get(characterActor.gameObject).AddRecipe(recipeDef, false);
+                                        instance.AddRecipe(recipeDef, false);
+                                        break;
+                                    }
+                                }
+                            }
+                            recipeDef = null;
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("TryGet Didn't work, returned id: " + componentDef + ".");
+                    }
                 }
                 return orig(instance, item, quiet, network);
             };
@@ -65,7 +80,6 @@ namespace NecroForge
             On.Necro.Inventory.Drop += (orig, instance, def) =>
             {
                 Debug.Log("Dropping " + def.id + " of kind " + def.kind);
-                Debug.Log("Item Kind - " + def.kind);
                 if (def.kind == ItemDef.Kind.Weapon)
                 {
                     Debug.Log("Hey we are dropping a weapon, lets see if it'll be removed");
@@ -73,6 +87,56 @@ namespace NecroForge
                     if (instance.HaveIngredient(def.id + "_Comp", 1))
                     {
                         instance.RemoveIngredient(def.id + "_Comp", 1);
+
+                        /***********************************************/
+                        /*  This is the business of dropping a recipe  */
+                        /***********************************************/
+
+                        Debug.Log(instance.KnownRecipes.ToString());
+
+                        // Loop through all IDs in instance.KnownRecipes... 
+                        Debug.Log("(Drop)Checking Recipes...");
+                        foreach (ItemDef recipeDef in instance.KnownRecipes)
+                        {
+                            // Get ItemDef from string id...
+                            // if there are crafting components listed and the number is greater than 0...
+                            if (recipeDef.craftingComponents != null && recipeDef.craftingComponents.Length > 0)
+                            {
+                                // if recipe contains component version of picked up item...
+                                foreach (ItemDef.CraftingComponent component in recipeDef.craftingComponents)
+                                {
+                                    if (component.itemDefId.Contains(def.id + "_Comp"))
+                                    {
+                                        // Add recipe and boast.
+                                        Debug.Log("(Drop)Relevant recipe found, dropping: " + recipeDef.id);
+                                        Debug.Log("(Drop)Relevant recipe found, dropping: " + instance.gameObject);
+                                        //instance.KnownRecipes.Remove(recipeDef);
+                                        if (instance.KnownRecipes.Remove(recipeDef))
+                                        {
+                                            Debug.Log("KnownRecipes.Remove() worked.");
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            Debug.Log("Failed to remove recipe. The problem is KnownRecipes.");
+                                            //Make entirely new dictionary containing the relevant recipes, 
+                                            // Then remove from knownrecipes where it intersects the new dictionary.
+                                            //instance.KnownRecipes.IntersectWith();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        foreach (ItemDef recipe in instance.KnownRecipes)
+                        {
+                            Debug.Log("Recipe: " + recipe.id);
+                            Debug.Log("Recipe: " + recipe.id);
+                        }
+                        foreach (ItemDef recipe in instance.KnownRecipes)
+                        {
+                            Debug.Log("Recipe: " + recipe.id);
+                            Debug.Log("Recipe: " + recipe.id);
+                        }
                     }
                 }
                 return orig(instance, def);
@@ -116,13 +180,14 @@ namespace NecroForge
                             //Now, search the Item CSV for an item with the same name as the ingredient
                             temp = LazySingletonBehavior<DataManager>.Instance.Items.Get(temp.id);
 
-
+                            /*  
+                             *  If crafted item is a weapon, remove the recipe.
+                            */
 
                             Debug.Log("Checking if " + temp.id + " is equipped");
                             //This creates an equippable that will then be used as a reference to delete the equipment from the player's inventory
                             Equippable equipBoi = instance.GetEquippedFromDef(temp);
                             ThirdPersonCameraControl._instance.Inventory.removeEquipped(equipBoi);
-
 
                             Debug.Log("Yay we removed it!");
                         }
