@@ -43,10 +43,6 @@ namespace NecroForge
                 {
                     return CompToID(component.itemDefId);
                 }
-                else
-                {
-                    return null;
-                }
             }
             return null;
         }
@@ -61,7 +57,7 @@ namespace NecroForge
              * ex: if passed "CrackedLongsword", look up all knownRecipes containing "CrackedLongsword_Comp" and remove
              */
             // Loop through all IDs in instance.KnownRecipes... 
-            Debug.Log("(Drop)Checking Recipes...");
+            // Debug.Log("(Drop)Checking Recipes...");
             foreach (ItemDef recipeDef in instance.KnownRecipes)
             {
                 // Get ItemDef from string id...
@@ -74,8 +70,8 @@ namespace NecroForge
                         if (component.itemDefId.Contains( IDToComp(defID) ))
                         {
                             // drop recipe and boast.
-                            Debug.Log("(Drop)Relevant recipe found, dropping: " + recipeDef.id);
-                            Debug.Log("(Drop)Relevant recipe found, dropping: " + instance.gameObject);
+                            // Debug.Log("(Drop)Relevant recipe found, dropping: " + recipeDef.id);
+                            // Debug.Log("(Drop)Relevant recipe found, dropping: " + instance.gameObject);
 
                             instance.RemoveRecipe(recipeDef);
                         }
@@ -86,16 +82,19 @@ namespace NecroForge
         /**********************************************/
         /*  This is the business of adding a recipe   */
         /**********************************************/
-        public void HarvestRecipeFromTheVoid(Inventory instance, string defID)
+        public void HarvestRecipeFromTheVoid(Inventory instance, ItemDef def)
         {
             // Get actor...
             //Actor characterActor = ThirdPersonCameraControl.Instance.CharacterActor;
 
             // Make general use recipeDef...
             ItemDef recipeDef = null;
+            
+            
+
 
             // Loop through all IDs in Items.Keys... 
-            Debug.Log("Fetching Recipes...");
+            // Debug.Log("Fetching Recipes...");
             foreach (string id in LazySingletonBehavior<DataManager>.Instance.Items.Keys)
             {
                 // Get ItemDef from string id...
@@ -106,10 +105,10 @@ namespace NecroForge
                     // if recipe contains component version of picked up item...
                     foreach (ItemDef.CraftingComponent component in recipeDef.craftingComponents)
                     {
-                        if (component.itemDefId.Contains(defID))
+                        if (component.itemDefId.Contains(def.id))
                         {
                             // Add recipe and boast.
-                            Debug.Log("Relevant recipe found, adding: " + recipeDef.id);
+                            // Debug.Log("Relevant recipe found, adding: " + recipeDef.id);
                             instance.AddRecipe(recipeDef, false);
                             break;
                         }
@@ -130,19 +129,19 @@ namespace NecroForge
                 if (item.def.kind == ItemDef.Kind.Weapon)
                 {
                     //Debug.Log("Hey we are picking up a weapon! and we also should have: " + LazySingletonBehavior<DataManager>.Instance.Items.Get(item.def.id + "_Comp").id);
-                    Debug.Log("Hey we are picking up a weapon!");
+                    // Debug.Log("Hey we are picking up a weapon!");
 
                     if (LazySingletonBehavior<DataManager>.Instance.Items.TryGet( IDToComp(item.def.id), out ItemDef componentDef))
                     {
                         Item componentItem = new Item(componentDef);
                         instance.AddItem(componentItem, quiet, network);
-                        Debug.Log("You got a single " + componentItem.def.id + " which means it exists.");
+                        // Debug.Log("You got a single " + componentItem.def.id + " which means it exists.");
 
-                        HarvestRecipeFromTheVoid(instance, item.def.id);
+                        HarvestRecipeFromTheVoid(instance, item.def);
                     }
                     else
                     {
-                        Debug.Log("TryGet Didn't work, returned id: " + componentDef + ".");
+                        // Debug.Log("TryGet Didn't work, returned id: " + componentDef + ".");
                     }
                 }
                 return orig(instance, item, quiet, network);
@@ -151,8 +150,8 @@ namespace NecroForge
             //We need to modify drop so that when you drop an equipment you also drop the ingredient/component
             On.Necro.Inventory.Drop += (orig, instance, def) =>
             {
-                Debug.Log("Dropping " + def.id + " of kind " + def.kind);
-                Debug.Log("Dropping " + def.id + " of kind " + def.kind);
+                // Debug.Log("Dropping " + def.id + " of kind " + def.kind);
+                // Debug.Log("Dropping " + def.id + " of kind " + def.kind);
                 if (def.kind == ItemDef.Kind.Weapon)
                 {
                     //Removes ingredient/component with same name if it exists
@@ -169,8 +168,8 @@ namespace NecroForge
             //We need to modify craft so that when you craft something new with your ingredient/component, the associated equipment will also vanish
             On.Necro.Inventory.Craft += (orig, instance, itemDef) =>
             {
-                Debug.Log("Craft() got " + itemDef.id + "of type: " + itemDef.kind);
-                Debug.Log("Craft() got " + itemDef.id + "of type: " + itemDef.kind);
+                // Debug.Log("Craft() got " + itemDef.id + "of type: " + itemDef.kind);
+                // Debug.Log("Craft() got " + itemDef.id + "of type: " + itemDef.kind);
 
                 bool returnVal;
 
@@ -181,6 +180,8 @@ namespace NecroForge
                     ItemDef temp = new ItemDef();
                     temp.id = itemDef.craftingComponents[i].itemDefId;
                     compIds[i] = temp;
+                    // Debug.Log("Crafting component: " + temp.id);
+                    // Debug.Log("Crafting component: " + temp.id);
                 }
 
                 //Now we run the original function, and if its successful, we know now to check for equipment
@@ -191,17 +192,6 @@ namespace NecroForge
                     ItemDef temp = new ItemDef();
                     for (int x = 0; x < compIds.Length; x++)
                     {
-                        //int index = 0;
-                        ////Give this temp ItemDef the name of the ingredient/component
-                        //for (int i = 0; i < compIds[x].id.Length; i++)
-                        //{
-                        //    if (compIds[x].id[i] == '_')
-                        //        break;
-                        //    index++;
-                        //}
-
-                        // temp.id = compIds[x].id.Substring(0, index);
-
                         if (compIds[x].id.Contains("_"))
                         {
                             temp.id = compIds[x].id.Split('_')[0];
@@ -215,15 +205,14 @@ namespace NecroForge
                             //Now, search the Item CSV for an item with the same name as the ingredient
                             temp = LazySingletonBehavior<DataManager>.Instance.Items.Get(temp.id);
 
-                            Debug.Log("Checking if " + temp.id + " is equipped");
+                            HurlRecipeIntoTheVoid(instance, GetItemCompFromDef(itemDef)); //seems that no matter where this happens it doesn't work.
+                            // Debug.Log("Checking if " + temp.id + " is equipped");
                             //This creates an equippable that will then be used as a reference to delete the equipment from the player's inventory
                             Equippable equipBoi = instance.GetEquippedFromDef(temp);
                             //ThirdPersonCameraControl._instance.Inventory.removeEquipped(equipBoi);
                             instance.removeEquipped(equipBoi);
 
-                            Debug.Log("Yay we removed it!");
-
-                            HurlRecipeIntoTheVoid(instance, GetItemCompFromDef(itemDef)); //seems that no matter where this happens it doesn't work.
+                            // Debug.Log("Yay we removed it!");
                         }
                     }
                 }
